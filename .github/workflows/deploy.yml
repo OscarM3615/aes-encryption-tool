@@ -1,0 +1,25 @@
+name: Deploy to Github Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - name: install dependencies
+        run: yarn install --frozen-lockfile
+      - name: build app
+        run: |
+          yarn run build
+          touch ./public/.nojekyll
+      - name: deploy
+        run: JamesIves/github-pages-deploy-action@v4.2.2
+        with:
+          branch: gh-pages
+          folder: public
